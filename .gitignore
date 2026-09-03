@@ -1,0 +1,12 @@
+# Lixo do Windows / OneDrive
+desktop.ini
+Thumbs.db
+ehthumbs.db
+
+# Lixo do macOS, caso o projeto abra em outra máquina
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,1179 @@
+/* ==========================================================================
+   Tema "Diário de Campo" — Painel de Tarefas Acadêmicas
+   Ambientação Gravity Falls: página de pergaminho sobre madeira escura,
+   capa de couro com a mão de seis dedos e níveis de prioridade
+   representados pelos três Diários.
+
+   Mapa de prioridade:
+     Diário 1 (couro azul-petróleo) .... prioridade baixa
+     Diário 2 (couro âmbar) ............ prioridade média
+     Diário 3 (couro carmesim) ......... prioridade alta
+   ========================================================================== */
+
+:root {
+  /* Papel e tinta */
+  --pergaminho: #E6D8B8;
+  --pergaminho-claro: #F2E7CC;
+  --pergaminho-escuro: #D5C29B;
+  --tinta: #2E2013;
+  --tinta-suave: #5E4A2E;
+  --linha: #B9A277;
+
+  /* Couro dos diários.
+     O âmbar do Diário 2 é mais escuro do que o dourado sugeriria: com o
+     tom claro, a etiqueta de prioridade (texto pergaminho sobre couro)
+     ficava em 3,9:1 e não passava no mínimo de 4,5:1 da WCAG AA. */
+  --d1-couro: #1F4E52;
+  --d2-couro: #7F560C;
+  --d3-couro: #8E2B22;
+
+  /* Metais e madeira */
+  --dourado: #C9A227;
+  --dourado-claro: #E8CE86;
+  --madeira: #16100A;
+
+  /* Tinta invisível, revelada sob luz negra */
+  --uv: #7A5CFF;
+
+  /* --------------------------------------------------------------------
+     Quatro papéis tipográficos, cada um com um trabalho definido.
+
+     display — só nos momentos de cena: a capa, o carimbo, a cifra. Special
+               Elite tem o caráter da máquina de escrever surrada, mas é
+               irregular demais para texto corrido ou para corpo pequeno.
+     titulo  — serif humanista de raiz caligráfica. Entrou no lugar da Bitter,
+               que era legível mas mecânica demais: as terminações angulares
+               e o ritmo irregular da Alegreya dão à página uma mão humana
+               sem custar nada em legibilidade a 0,8rem.
+     corpo   — serif de leitura, com haste robusta o bastante para não se
+               dissolver na textura do pergaminho.
+     mao     — reservada ao que é manuscrito de verdade: a assinatura e o
+               nome do responsável. Nunca em texto que precise ser lido rápido.
+     -------------------------------------------------------------------- */
+  --fonte-display: "Special Elite", "Courier New", monospace;
+  --fonte-titulo: "Alegreya", "Palatino Linotype", Georgia, serif;
+  --fonte-corpo: "Lora", Georgia, "Times New Roman", serif;
+  --fonte-mao: "Caveat", "Segoe Script", cursive;
+
+  --transicao: .22s ease;
+
+  /* Cursores: a mão de seis dedos no lugar da seta.
+     PNG e não SVG porque Chrome e Safari ignoram SVG em `cursor` — só
+     Firefox aceita, e a página cairia na seta padrão nos outros dois.
+     Os dois números são o ponto de clique: a ponta do dedo do meio. */
+  --cursor-mao: url("img/cursor-mao.png") 14 1;
+  --cursor-mao-ativa: url("img/cursor-mao-ativa.png") 15 1;
+
+  /* Ícones desenhados em SVG (mão de seis dedos e símbolos da roda) */
+  --icone-mao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23E8CE86'%3E%3Crect x='14' y='58' width='64' height='34' rx='13'/%3E%3Crect x='16' y='44' width='11' height='30' rx='5.5' transform='rotate(-18 21.5 74)'/%3E%3Crect x='29' y='32' width='11' height='42' rx='5.5' transform='rotate(-9 34.5 74)'/%3E%3Crect x='42' y='26' width='11' height='48' rx='5.5'/%3E%3Crect x='55' y='32' width='11' height='42' rx='5.5' transform='rotate(9 60.5 74)'/%3E%3Crect x='68' y='44' width='11' height='30' rx='5.5' transform='rotate(18 73.5 74)'/%3E%3Crect x='76' y='58' width='11' height='26' rx='5.5' transform='rotate(30 81.5 84)'/%3E%3C/g%3E%3C/svg%3E");
+
+  --icone-pinheiro: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%233B2A18' d='M50 8 L66 38 L57 38 L74 64 L58 64 L58 88 L42 88 L42 64 L26 64 L43 38 L34 38 Z'/%3E%3C/svg%3E");
+  --icone-estrela: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%233B2A18' d='M55 12 L66 40 L96 42 L73 61 L80 90 L55 74 L30 90 L37 61 L14 42 L44 40 Z'/%3E%3C/svg%3E");
+  --icone-interrogacao: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='84' font-family='Georgia,serif' font-size='96' font-weight='700' text-anchor='middle' fill='%233B2A18'%3E?%3C/text%3E%3C/svg%3E");
+  --icone-oculos: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='none' stroke='%233B2A18' stroke-width='8' stroke-linecap='round'%3E%3Ccircle cx='30' cy='54' r='18'/%3E%3Ccircle cx='70' cy='54' r='18'/%3E%3Cpath d='M48 52 h4'/%3E%3Cpath d='M12 44 L4 34'/%3E%3Cpath d='M88 44 L96 34'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* --------------------------------------------------------------------
+     Os moradores de Gravity Falls, um por nível de prioridade.
+
+     Desenhados à mão em SVG em vez de baixados da web: o interior do Diário
+     3 é feito de esboços a nanquim com anotações na margem, então um traço
+     chapado combina melhor com o pergaminho do que uma imagem da série. E
+     como são vetor embutido no CSS, funcionam offline, escalam de 44px a
+     96px sem borrar e não dependem de nenhum link continuar vivo.
+     -------------------------------------------------------------------- */
+
+  /* Diário 1 — Gnomo: chapéu vermelho, olhos arregalados, barba enorme. */
+  --sketch-gnomo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%233B2A18' stroke-width='2.4' stroke-linejoin='round'%3E%3Cellipse cx='50' cy='57' rx='19' ry='16' fill='%23E9C6A0'/%3E%3Cpath d='M31 57 C25 77 28 90 38 92 C44 94 46 91 50 93 C54 91 56 94 62 92 C72 90 75 77 69 57 C67 67 61 71 50 71 C39 71 33 67 31 57 Z' fill='%23F2EDDD'/%3E%3Cpath d='M53 5 L27 47 C40 53 62 53 73 45 Z' fill='%23B23A2E'/%3E%3Ccircle cx='42' cy='57' r='6.2' fill='%23FFFDF6'/%3E%3Ccircle cx='59' cy='57' r='6.2' fill='%23FFFDF6'/%3E%3Cellipse cx='50.5' cy='66' rx='5.5' ry='4.5' fill='%23DCA484'/%3E%3C/g%3E%3Ccircle cx='43' cy='58' r='2.9' fill='%23241A10'/%3E%3Ccircle cx='60' cy='58' r='2.9' fill='%23241A10'/%3E%3C/svg%3E");
+
+  /* Diário 2 — Gideon: topete branco, terno azul-claro, amuleto verde. */
+  --sketch-gideon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%233B2A18' stroke-width='2.4' stroke-linejoin='round'%3E%3Cpath d='M30 64 C26 76 25 87 26 96 L74 96 C75 87 74 76 70 64 C62 69 38 69 30 64 Z' fill='%23C9DFEC'/%3E%3Cellipse cx='50' cy='50' rx='18' ry='17' fill='%23F2D9C4'/%3E%3Cpath d='M23 42 C17 17 32 4 51 4 C70 4 84 17 78 40 C68 45 58 47 50 46 C40 45 29 45 23 42 Z' fill='%23F7F3E6'/%3E%3Ccircle cx='42' cy='53' r='6.2' fill='%23FFFDF6'/%3E%3Ccircle cx='59' cy='53' r='6.2' fill='%23FFFDF6'/%3E%3Cpath d='M42 66 L50 75 L58 66' fill='%23FFFDF6'/%3E%3Ccircle cx='50' cy='81' r='6' fill='%235FA83F'/%3E%3C/g%3E%3Cg fill='%233E86B0'%3E%3Ccircle cx='42.4' cy='54' r='3.2'/%3E%3Ccircle cx='59.4' cy='54' r='3.2'/%3E%3C/g%3E%3Cg fill='%231A1208'%3E%3Ccircle cx='42.8' cy='54' r='1.5'/%3E%3Ccircle cx='59.8' cy='54' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* Diário 3 — Bill Cipher: triângulo, olho único, cartola e gravata. */
+  --sketch-bill: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg stroke='%23241A10' stroke-width='2.6' stroke-linecap='round' fill='none'%3E%3Cpath d='M15 60 L27 68'/%3E%3Cpath d='M85 60 L73 68'/%3E%3Cpath d='M39 87 L35 97'/%3E%3Cpath d='M61 87 L65 97'/%3E%3C/g%3E%3Cpath d='M50 15 L88 87 L12 87 Z' fill='%23F2C438' stroke='%23241A10' stroke-width='2.6' stroke-linejoin='round'/%3E%3Cg stroke='%23241A10' stroke-width='1.7' fill='none' stroke-linecap='round'%3E%3Cpath d='M31 47 L69 47'/%3E%3Cpath d='M43 47 L43 38'/%3E%3Cpath d='M57 47 L57 38'/%3E%3Cpath d='M37 38 L63 38'/%3E%3C/g%3E%3Cellipse cx='50' cy='64' rx='14' ry='10' fill='%23FFFDF6' stroke='%23241A10' stroke-width='2.4'/%3E%3Ccircle cx='50' cy='64' r='5' fill='%23241A10'/%3E%3Cg stroke='%23241A10' stroke-width='2.2' stroke-linecap='round'%3E%3Cpath d='M35 56 L31 51'/%3E%3Cpath d='M50 54 L50 49'/%3E%3Cpath d='M65 56 L69 51'/%3E%3C/g%3E%3Cpath d='M50 79 L41 75 L41 87 Z' fill='%23241A10'/%3E%3Cpath d='M50 79 L59 75 L59 87 Z' fill='%23241A10'/%3E%3Crect x='38' y='11' width='24' height='3.6' fill='%23241A10'/%3E%3Crect x='43' y='1' width='14' height='11' fill='%23241A10'/%3E%3C/svg%3E");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ---------- Fundo: tábuas escuras da cabana ---------- */
+
+body {
+  margin: 0;
+  padding: 0 1.25rem 3.5rem;
+  min-height: 100vh;
+  cursor: var(--cursor-mao), auto;
+  color: var(--tinta);
+  font-family: var(--fonte-corpo);
+  font-size: 17px;
+  line-height: 1.65;
+  background-color: var(--madeira);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .38) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 34px),
+    radial-gradient(130% 90% at 50% 0%, #2C1D11 0%, #140D07 68%);
+}
+
+/* ---------- Capa do diário (cabeçalho) ---------- */
+
+header {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 2.75rem 0 0;
+}
+
+.capa-diario {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.6rem 1.9rem 1.6rem 2.4rem;
+  border: 1px solid #3C100C;
+  border-radius: 5px 16px 16px 5px;
+  color: var(--pergaminho-claro);
+  background-color: #7A2118;
+  background-image:
+    repeating-linear-gradient(104deg, rgba(0, 0, 0, .12) 0 3px, transparent 3px 10px),
+    repeating-linear-gradient(14deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 11px),
+    linear-gradient(158deg, #9C3628 0%, #7A2118 46%, #52140F 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(201, 162, 39, .45),
+    inset 0 0 46px rgba(0, 0, 0, .55),
+    0 20px 34px rgba(0, 0, 0, .6);
+  transition: box-shadow var(--transicao);
+}
+
+/* Hover: o filete dourado da capa acende, como couro pegando luz. */
+.capa-diario:hover {
+  box-shadow:
+    inset 0 0 0 2px rgba(201, 162, 39, .85),
+    inset 0 0 46px rgba(0, 0, 0, .5),
+    0 24px 42px rgba(0, 0, 0, .68);
+}
+
+/* Lombada à esquerda */
+.capa-diario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 18px;
+  border-radius: 5px 0 0 5px;
+  background: linear-gradient(90deg, #38100C 0%, #5A1811 55%, rgba(90, 24, 17, 0) 100%);
+}
+
+.marca-diario {
+  position: relative;
+  flex-shrink: 0;
+  width: 104px;
+  height: 104px;
+  color: var(--dourado-claro);
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .65));
+  transition: transform var(--transicao), filter var(--transicao);
+}
+
+.capa-diario:hover .marca-diario {
+  transform: rotate(-3deg) scale(1.04);
+  filter:
+    drop-shadow(0 0 12px rgba(232, 206, 134, .6))
+    drop-shadow(0 3px 4px rgba(0, 0, 0, .65));
+}
+
+.marca-diario svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.numero-diario {
+  position: absolute;
+  top: 63%;
+  right: 0;
+  left: 0;
+  font-family: var(--fonte-display);
+  font-size: 2rem;
+  line-height: 1;
+  text-align: center;
+  color: #58150F;
+}
+
+.capa-texto {
+  min-width: 0;
+}
+
+.selo {
+  margin: 0 0 .2rem;
+  font-family: var(--fonte-mao);
+  font-size: 1.3rem;
+  line-height: 1.15;
+  color: var(--dourado-claro);
+  opacity: .92;
+}
+
+header h1 {
+  margin: 0;
+  font-family: var(--fonte-display);
+  font-size: clamp(1.55rem, 4.2vw, 2.4rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: .01em;
+  color: var(--dourado-claro);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .45);
+}
+
+.subtitulo {
+  margin: .5rem 0 0;
+  font-size: .98rem;
+  font-style: italic;
+  color: rgba(245, 236, 214, .86);
+}
+
+/* ---------- Página de pergaminho ---------- */
+
+main {
+  max-width: 1020px;
+  margin: 0 auto;
+  padding: 2.2rem 1.9rem 2.6rem;
+  border: 1px solid #8B7443;
+  border-top: none;
+  background-color: var(--pergaminho);
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(138, 94, 38, .22), transparent 42%),
+    radial-gradient(circle at 88% 38%, rgba(122, 82, 30, .18), transparent 38%),
+    radial-gradient(circle at 34% 92%, rgba(146, 106, 46, .16), transparent 40%),
+    radial-gradient(circle at 74% 72%, rgba(110, 74, 28, .12), transparent 34%);
+  box-shadow:
+    inset 0 0 80px rgba(108, 72, 28, .38),
+    0 26px 44px rgba(0, 0, 0, .5);
+}
+
+/* ---------- Busca e filtros ---------- */
+
+.painel-busca {
+  padding: 1.3rem 1.5rem 1.5rem;
+  margin-bottom: 2.4rem;
+  border: 1px dashed var(--linha);
+  border-radius: 4px;
+  background: rgba(255, 250, 236, .5);
+}
+
+h2 {
+  margin-top: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.12rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--tinta);
+}
+
+.painel-busca h2 {
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--linha);
+}
+
+form > div {
+  margin-bottom: 1rem;
+}
+
+form label {
+  display: block;
+  margin-bottom: .4rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: .88rem;
+  color: var(--tinta-suave);
+}
+
+input[type="search"] {
+  width: 100%;
+  max-width: 380px;
+  padding: .55rem .85rem;
+  border: 1px solid var(--linha);
+  border-radius: 3px;
+  background: var(--pergaminho-claro);
+  box-shadow: inset 0 2px 5px rgba(90, 60, 20, .18);
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  color: var(--tinta);
+  /* O campo de texto mantém o I-beam do sistema: trocar o cursor de uma
+     caixa de digitação por um símbolo esconde onde o texto vai entrar. */
+  cursor: text;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+input[type="search"]:hover {
+  border-color: var(--dourado);
+  box-shadow: inset 0 2px 5px rgba(90, 60, 20, .18), 0 0 0 3px rgba(201, 162, 39, .16);
+}
+
+input[type="search"]::placeholder {
+  color: rgba(94, 74, 46, .65);
+  font-style: italic;
+}
+
+fieldset {
+  margin: 1.1rem 0;
+  padding: .8rem 1rem 1rem;
+  border: 1px solid var(--linha);
+  border-radius: 3px;
+  background: rgba(255, 250, 236, .45);
+  transition: border-color var(--transicao), background-color var(--transicao);
+}
+
+fieldset:hover {
+  border-color: var(--dourado);
+  background: rgba(255, 250, 236, .72);
+}
+
+legend {
+  padding: 0 .5rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--tinta);
+}
+
+fieldset div {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  margin: .3rem 1rem .3rem 0;
+}
+
+fieldset label {
+  display: inline;
+  margin: 0;
+  font-family: var(--fonte-corpo);
+  font-weight: 500;
+  font-size: .96rem;
+  color: var(--tinta);
+  cursor: var(--cursor-mao-ativa), pointer;
+  transition: color var(--transicao);
+}
+
+/* Hover na opção inteira: a área clicável é o par input + label, então a
+   resposta visual acompanha o par, não só o texto. */
+fieldset div:hover label {
+  color: #1C1209;
+}
+
+/* Cada opção é uma pequena íris dourada */
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 2px solid var(--tinta);
+  border-radius: 50%;
+  background: var(--pergaminho-claro);
+  cursor: var(--cursor-mao-ativa), pointer;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+input[type="radio"]:checked {
+  background:
+    radial-gradient(circle at center,
+      var(--tinta) 0 30%,
+      var(--dourado) 32% 62%,
+      var(--pergaminho-claro) 64%);
+}
+
+fieldset div:hover input[type="radio"],
+input[type="radio"]:hover {
+  border-color: var(--dourado);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, .28);
+}
+
+/* Marcadores dos diários nas opções de prioridade */
+.filtro-diarios label {
+  position: relative;
+  padding-left: 17px;
+}
+
+.filtro-diarios label::before {
+  content: "";
+  position: absolute;
+  top: .18em;
+  left: 0;
+  width: 8px;
+  height: 1.05em;
+  border-radius: 1px;
+  border: 1px solid rgba(0, 0, 0, .35);
+  transition: transform var(--transicao), box-shadow var(--transicao);
+}
+
+/* Hover: o livrinho da opção se ergue um pouco na estante. */
+.filtro-diarios div:hover label::before {
+  transform: translateY(-2px) scaleY(1.12);
+  box-shadow: 0 2px 4px rgba(30, 18, 6, .45);
+}
+
+label[for="prioridade-baixa"]::before { background: var(--d1-couro); }
+label[for="prioridade-media"]::before { background: var(--d2-couro); }
+label[for="prioridade-alta"]::before  { background: var(--d3-couro); }
+label[for="prioridade-todas"]::before {
+  background: linear-gradient(180deg, var(--d3-couro) 0 33%, var(--d2-couro) 33% 66%, var(--d1-couro) 66%);
+}
+
+button[type="submit"] {
+  padding: .6rem 1.6rem;
+  border: 1px solid #3C100C;
+  border-radius: 3px;
+  background-color: var(--d3-couro);
+  background-image: linear-gradient(160deg, #A03A2B, #6E1C14);
+  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .5), 0 3px 0 rgba(0, 0, 0, .35);
+  color: var(--dourado-claro);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: .86rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: var(--cursor-mao-ativa), pointer;
+  transition: background-image var(--transicao), box-shadow var(--transicao), transform var(--transicao);
+}
+
+button[type="submit"]:hover {
+  background-image: linear-gradient(160deg, #B54534, #7E2117);
+  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .95), 0 5px 0 rgba(0, 0, 0, .35), 0 6px 16px rgba(0, 0, 0, .3);
+  transform: translateY(-2px);
+}
+
+button[type="submit"]:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .7), 0 1px 0 rgba(0, 0, 0, .35);
+}
+
+/* ---------- Chave dos diários: quem responde por cada prioridade ---------- */
+
+.chave-diarios {
+  padding: 1.3rem 1.5rem 1.5rem;
+  margin-bottom: 2.4rem;
+  border: 1px solid var(--linha);
+  border-radius: 4px;
+  background: rgba(255, 250, 236, .38);
+}
+
+.chave-diarios h2 {
+  margin-bottom: .3rem;
+}
+
+.chave-intro {
+  margin: 0 0 1.1rem;
+  font-style: italic;
+  color: var(--tinta-suave);
+}
+
+.chave-diarios ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chave-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding-left: 12px;
+  border-left: 5px solid var(--couro);
+  cursor: var(--cursor-mao-ativa), pointer;
+}
+
+.chave-item--d1 { --couro: var(--d1-couro); --couro-tinta: #133337; --personagem: var(--sketch-gnomo); }
+.chave-item--d2 { --couro: var(--d2-couro); --couro-tinta: #6B4A0A; --personagem: var(--sketch-gideon); }
+.chave-item--d3 { --couro: var(--d3-couro); --couro-tinta: #6E1F18; --personagem: var(--sketch-bill); }
+
+.chave-retrato {
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  background: var(--personagem) center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgba(30, 18, 6, .3));
+  transition: transform .28s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+/* Hover: o morador se anima e olha para você. */
+.chave-item:hover .chave-retrato {
+  transform: scale(1.16) rotate(-5deg);
+}
+
+.chave-texto {
+  font-size: .92rem;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+}
+
+.chave-texto strong {
+  display: block;
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: .84rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--couro-tinta);
+}
+
+.chave-texto em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--tinta);
+}
+
+/* ---------- Foco de teclado: um brilho dourado ---------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--pergaminho),
+    0 0 0 5px var(--dourado),
+    0 0 14px rgba(201, 162, 39, .6);
+}
+
+/* ---------- Os quatro estados da tela ---------- */
+
+/* .quadro e .tela definem display, o que sobrescreveria o atributo hidden.
+   Esta regra devolve ao hidden a última palavra. */
+[hidden] {
+  display: none !important;
+}
+
+/* Região viva: sem moldura enquanto está vazia, para não deixar uma caixa
+   solta no início do documento. Nunca recebe display:none — um leitor de
+   tela não anuncia mudanças em elemento oculto. */
+.regiao-status {
+  min-height: 1.5em;
+  margin: 0 0 1.2rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: .88rem;
+  letter-spacing: .02em;
+  color: var(--tinta-suave);
+}
+
+.regiao-status:not(:empty)::before {
+  content: "❯ ";
+  color: var(--dourado);
+}
+
+.tela {
+  display: block;
+  padding: 2.2rem 1.8rem;
+  margin-bottom: 2rem;
+  border: 2px dashed var(--linha);
+  border-radius: 4px;
+  background: rgba(255, 250, 236, .55);
+  text-align: center;
+}
+
+.tela p {
+  margin: .4rem 0 0;
+  color: var(--tinta-suave);
+}
+
+.tela-titulo {
+  margin: 0 !important;
+  font-family: var(--fonte-display);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: var(--tinta) !important;
+}
+
+/* Carregando: a tinta invisível revelando-se sob a luz negra */
+.barra-revelacao {
+  overflow: hidden;
+  width: min(320px, 100%);
+  height: 6px;
+  margin: 1.4rem auto 0;
+  border-radius: 999px;
+  background: rgba(46, 32, 19, .16);
+}
+
+.barra-revelacao::after {
+  content: "";
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--uv), transparent);
+  animation: revelar 1.3s ease-in-out infinite;
+}
+
+@keyframes revelar {
+  from { transform: translateX(-110%); }
+  to   { transform: translateX(260%); }
+}
+
+.tela--vazio {
+  opacity: .9;
+}
+
+.tela--erro {
+  border-style: solid;
+  border-color: var(--d3-couro);
+  background: rgba(142, 43, 34, .07);
+}
+
+.tela--erro .tela-titulo {
+  color: var(--d3-couro) !important;
+}
+
+#mensagem-erro {
+  max-width: 46ch;
+  margin-inline: auto !important;
+}
+
+/* ---------- Revelação conforme a página rola ---------- */
+
+/* Tudo aqui depende da classe .js-anim, que só é posta na raiz por
+   js/enfeites.js. Sem script — ou com prefers-reduced-motion — nada é
+   escondido e a página aparece inteira de uma vez. */
+.js-anim .revela,
+.js-anim .coluna li,
+.js-anim .coluna h3 {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1);
+}
+
+.js-anim .revela.revelado,
+.js-anim .coluna li.revelado,
+.js-anim .coluna h3.revelado {
+  opacity: 1;
+  transform: none;
+}
+
+/* A entrada mora no <li> e o hover mora no cartão, de propósito: são duas
+   transformações em elementos diferentes, então nenhuma sobrescreve a outra
+   nem exige uma regra mais específica que o :hover para vencer. */
+
+/* ---------- Quadro de tarefas ---------- */
+
+.quadro {
+  display: flex;
+  flex-direction: column;
+  gap: 2.3rem;
+}
+
+.quadro > h2 {
+  margin-bottom: -.6rem;
+}
+
+.coluna h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 1rem;
+  padding-bottom: .55rem;
+  border-bottom: 2px dotted var(--linha);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--tinta);
+  transition: border-color var(--transicao);
+}
+
+.coluna h3:hover {
+  border-bottom-color: var(--dourado);
+}
+
+/* Cada coluna recebe um símbolo da roda de Bill Cipher */
+.coluna h3::before {
+  content: "";
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: 2px solid var(--dourado);
+  border-radius: 50%;
+  background-color: var(--pergaminho-claro);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 19px 19px;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, .16);
+  transition: transform var(--transicao), box-shadow var(--transicao);
+}
+
+/* Hover: o símbolo gira como a roda do Bill. */
+.coluna h3:hover::before {
+  transform: rotate(-10deg) scale(1.08);
+  box-shadow: 0 0 0 5px rgba(201, 162, 39, .32);
+}
+
+section[aria-labelledby="coluna-a-fazer-heading"] h3::before      { background-image: var(--icone-pinheiro); }
+section[aria-labelledby="coluna-em-andamento-heading"] h3::before { background-image: var(--icone-estrela); }
+section[aria-labelledby="coluna-em-revisao-heading"] h3::before   { background-image: var(--icone-interrogacao); }
+section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-image: var(--icone-oculos); }
+
+.coluna ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Cartões: cada tarefa é um diário na estante ---------- */
+
+.tarefa {
+  --inclinacao: 0deg;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  padding: 1.05rem 1.2rem 1.15rem 1.7rem;
+  border: 1px solid var(--linha);
+  border-radius: 2px 5px 5px 2px;
+  background-color: var(--pergaminho-claro);
+  background-image: radial-gradient(circle at 82% 12%, rgba(140, 96, 38, .14), transparent 46%);
+  box-shadow: 0 2px 4px rgba(30, 18, 6, .18);
+  cursor: var(--cursor-mao-ativa), pointer;
+  transform: translateY(0) rotate(var(--inclinacao));
+  transition: transform var(--transicao), box-shadow var(--transicao), border-color var(--transicao);
+}
+
+/* Nada num diário de campo fica perfeitamente alinhado. Uma inclinação
+   alternada de meio grau é o suficiente para o quadro parecer papel
+   empilhado em vez de uma grade. */
+.coluna li:nth-child(odd) .tarefa  { --inclinacao: -.45deg; }
+.coluna li:nth-child(even) .tarefa { --inclinacao: .5deg; }
+
+/* Lombada de couro com filetes dourados */
+.tarefa::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 13px;
+  border-radius: 2px 0 0 2px;
+  background-color: var(--couro);
+  background-image:
+    repeating-linear-gradient(180deg,
+      transparent 0 18px,
+      rgba(232, 206, 134, .85) 18px 21px,
+      transparent 21px 42px),
+    linear-gradient(90deg, rgba(0, 0, 0, .45), rgba(255, 255, 255, .16) 45%, rgba(0, 0, 0, .5));
+  transition: filter var(--transicao), width var(--transicao);
+}
+
+/* --couro pinta superfícies (lombada, etiqueta, borda); --couro-tinta é a
+   versão escurecida para quando a cor do diário vira texto sobre o papel;
+   --personagem é o morador que responde por aquele nível de prioridade. */
+.tarefa--d1 { --couro: var(--d1-couro); --couro-tinta: #133337; --personagem: var(--sketch-gnomo); }
+.tarefa--d2 { --couro: var(--d2-couro); --couro-tinta: #6B4A0A; --personagem: var(--sketch-gideon); }
+.tarefa--d3 { --couro: var(--d3-couro); --couro-tinta: #6E1F18; --personagem: var(--sketch-bill); }
+
+/* O personagem fica no canto do cartão como um esboço que ficou marcado no
+   papel. Quase invisível em repouso, para não brigar com o texto; ao passar
+   o mouse, a criatura sai da página. */
+.tarefa::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  bottom: -6px;
+  width: 98px;
+  height: 98px;
+  background: var(--personagem) center / contain no-repeat;
+  opacity: .15;
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+/* Hover do cartão: o diário se adianta na estante, endireita, a lombada pega
+   luz, o contorno de tinta invisível acende e o personagem aparece. */
+.tarefa:hover {
+  transform: translateY(-4px) rotate(0deg);
+  border-color: var(--couro);
+  box-shadow:
+    0 12px 24px rgba(20, 12, 4, .4),
+    0 0 0 1px rgba(122, 92, 255, .4),
+    0 0 24px rgba(122, 92, 255, .24);
+}
+
+.tarefa:hover::after {
+  opacity: .96;
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.tarefa:hover::before {
+  width: 16px;
+  filter: brightness(1.3);
+}
+
+.tarefa h4 {
+  margin: 0 0 .55rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 1.04rem;
+  line-height: 1.38;
+  letter-spacing: 0;
+  color: var(--tinta);
+  transition: color var(--transicao);
+}
+
+.tarefa:hover h4 {
+  color: var(--couro-tinta);
+}
+
+.tarefa p {
+  margin: .22rem 0;
+  font-size: .94rem;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+}
+
+/* Nome escrito à mão, com caneta azul */
+.responsavel span {
+  font-family: var(--fonte-mao);
+  font-weight: 700;
+  font-size: 1.24rem;
+  color: #23406E;
+}
+
+.prazo {
+  font-family: var(--fonte-titulo);
+  font-weight: 500;
+  font-size: .86rem !important;
+  color: var(--tinta) !important;
+}
+
+/* Etiqueta do diário: couro com a mão de seis dedos em dourado */
+.prioridade {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: .8rem !important;
+  padding: 3px 12px 3px 8px;
+  border: 1px solid rgba(0, 0, 0, .4);
+  border-radius: 3px;
+  background-color: var(--couro);
+  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .5);
+  color: var(--pergaminho-claro) !important;
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: .82rem !important;
+  letter-spacing: .01em;
+  transition: box-shadow var(--transicao), transform var(--transicao);
+}
+
+.prioridade::before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background: var(--icone-mao) center / contain no-repeat;
+  transition: transform var(--transicao);
+}
+
+/* Hover: a mão de seis dedos brilha na etiqueta. */
+.tarefa:hover .prioridade {
+  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .95), 0 0 12px rgba(232, 206, 134, .35);
+}
+
+.tarefa:hover .prioridade::before {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+.prioridade:hover {
+  transform: translateY(-1px);
+}
+
+/* Carimbo nos cartões já arquivados. Mora no <li>, e não no cartão, porque
+   o ::after do cartão agora é do personagem — e porque um carimbo de verdade
+   é aplicado por cima do papel, extravasando a borda. */
+.coluna li {
+  position: relative;
+}
+
+section[aria-labelledby="coluna-concluida-heading"] li::after {
+  content: "ARQUIVADO";
+  position: absolute;
+  top: .5rem;
+  right: .45rem;
+  z-index: 2;
+  padding: 2px 7px;
+  border: 2px solid var(--d3-couro);
+  border-radius: 3px;
+  color: var(--d3-couro);
+  font-family: var(--fonte-display);
+  font-size: .62rem;
+  letter-spacing: .12em;
+  opacity: .4;
+  transform: rotate(-9deg);
+  pointer-events: none;
+  transition: opacity var(--transicao), transform var(--transicao);
+}
+
+section[aria-labelledby="coluna-concluida-heading"] li:hover::after {
+  opacity: .78;
+  transform: rotate(-4deg) scale(1.06);
+}
+
+/* ---------- Rodapé ---------- */
+
+footer {
+  max-width: 1020px;
+  margin: 2.5rem auto 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(201, 162, 39, .3);
+  color: rgba(245, 236, 214, .82);
+  font-size: .94rem;
+}
+
+footer p {
+  margin: .2rem 0;
+}
+
+footer p:first-child {
+  font-family: var(--fonte-mao);
+  font-weight: 700;
+  font-size: 1.45rem;
+  color: var(--dourado-claro);
+}
+
+/* A cifra do rodapé: passar o mouse decifra, como tinta revelada. */
+.cifra {
+  display: inline-block;
+  margin-top: .8rem !important;
+  font-family: var(--fonte-display);
+  font-size: .78rem;
+  letter-spacing: .2em;
+  color: rgba(201, 162, 39, .62);
+  cursor: var(--cursor-mao-ativa), help;
+  transition: color var(--transicao), text-shadow var(--transicao);
+}
+
+.cifra:hover {
+  color: var(--dourado-claro);
+  text-shadow: 0 0 12px rgba(232, 206, 134, .45);
+}
+
+.cifra-clara {
+  display: none;
+}
+
+.cifra:hover .cifra-codigo {
+  display: none;
+}
+
+.cifra:hover .cifra-clara {
+  display: inline;
+}
+
+/* ---------- Bill Cipher flutuante (decorativo, criado via script) ---------- */
+
+.olho-flutuante {
+  position: fixed;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 56px;
+  padding-top: 16px;
+  background: linear-gradient(170deg, #F7D64A, #E3B21C);
+  clip-path: polygon(50% 2%, 98% 96%, 2% 96%);
+  filter:
+    drop-shadow(1.5px 0 0 #14100C) drop-shadow(-1.5px 0 0 #14100C)
+    drop-shadow(0 1.5px 0 #14100C) drop-shadow(0 -1.5px 0 #14100C)
+    drop-shadow(0 4px 6px rgba(0, 0, 0, .55));
+  pointer-events: none;
+}
+
+/* Esclera do olho único */
+.olho-flutuante::before {
+  content: "";
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  width: 30px;
+  height: 21px;
+  border-radius: 50%;
+  background: #FFF8E7;
+  box-shadow: inset 0 0 0 2px #14100C;
+  transform: translate(-50%, -50%);
+}
+
+/* Pálpebra: uma tampa amarela que desce do alto do olho. O ritmo e o atraso
+   vêm de js/enfeites.js, um valor por Bill, para que não pisquem em coro. */
+.olho-flutuante::after {
+  content: "";
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  z-index: 2;
+  width: 34px;
+  height: 25px;
+  border-radius: 0 0 60% 60%;
+  background: #EBC02C;
+  transform-origin: top center;
+  transform: translateX(-50%) scaleY(0);
+  animation: piscar var(--ritmo-piscada, 5.4s) infinite;
+  animation-delay: var(--atraso-piscada, 0s);
+}
+
+@keyframes piscar {
+  0%, 92%    { transform: translateX(-50%) scaleY(0); }
+  94.5%      { transform: translateX(-50%) scaleY(1); }
+  97%, 100%  { transform: translateX(-50%) scaleY(0); }
+}
+
+.pupila-flutuante {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #14100C;
+  transition: transform .05s linear;
+}
+
+.pupila-flutuante::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: .9;
+}
+
+/* ---------- Telas menores ---------- */
+
+@media (max-width: 720px) {
+  body {
+    padding: 0 .75rem 2.5rem;
+  }
+
+  main {
+    padding: 1.5rem 1.1rem 2rem;
+  }
+
+  .capa-diario {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.3rem 1.2rem 1.4rem 1.8rem;
+  }
+
+  .marca-diario {
+    width: 74px;
+    height: 74px;
+  }
+
+  .olho-flutuante {
+    display: none;
+  }
+}
+
+/* Em telas sem cursor, hover não existe ou fica "grudado" depois do toque.
+   O conteúdo continua o mesmo; só os efeitos de ponteiro saem de cena — e o
+   que só se via no hover passa a ser visível o tempo todo. */
+@media (hover: none) {
+  .cifra-clara {
+    display: inline;
+  }
+
+  .cifra-codigo {
+    display: none;
+  }
+
+  .tarefa::after {
+    opacity: .4;
+  }
+}
+
+/* No alto contraste do Windows, o cursor do sistema volta. Quem liga esse
+   modo costuma depender dele — muitas vezes ampliado ou repintado — e um PNG
+   decorativo de 32px passaria por cima dessa configuração. */
+@media (forced-colors: active) {
+  body {
+    cursor: auto;
+  }
+
+  button[type="submit"],
+  input[type="radio"],
+  fieldset label,
+  .tarefa,
+  .chave-item {
+    cursor: pointer;
+  }
+
+  .cifra {
+    cursor: help;
+  }
+}
+
+/* ---------- Respeita quem prefere menos movimento ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .olho-flutuante {
+    display: none;
+  }
+
+  .barra-revelacao::after {
+    width: 100%;
+    animation: none;
+    background: var(--uv);
+    opacity: .55;
+  }
+
+  /* Os hovers continuam existindo — só perdem o deslocamento e a rotação,
+     que é o que incomoda quem pediu menos movimento. A mudança de cor,
+     brilho e opacidade permanece como retorno visual. */
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .prioridade:hover,
+  button[type="submit"]:hover,
+  .capa-diario:hover .marca-diario,
+  .coluna h3:hover::before,
+  .filtro-diarios div:hover label::before,
+  .chave-item:hover .chave-retrato {
+    transform: none;
+  }
+
+  /* Estes dois mantêm a transformação de repouso em vez de zerá-la: pôr
+     transform:none faria a etiqueta e o cartão saltarem para a horizontal a
+     cada passagem do mouse, que é exatamente o movimento a evitar. */
+  .tarefa:hover {
+    transform: translateY(0) rotate(var(--inclinacao));
+  }
+
+  .tarefa:hover::after {
+    transform: none;
+  }
+
+  section[aria-labelledby="coluna-concluida-heading"] li:hover::after {
+    transform: rotate(-9deg);
+  }
+
+  /* Sem a revelação por scroll, nada pode ficar escondido esperando uma
+     classe que js/enfeites.js não vai adicionar. */
+  .revela,
+  .coluna li,
+  .coluna h3 {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "tarefas": [
+    {
+      "id": 1,
+      "titulo": "Elaborar roteiro de entrevista com o MEI",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "a-fazer",
+      "prioridade": "alta",
+      "prazo": "20/08/2026"
+    },
+    {
+      "id": 2,
+      "titulo": "Modelar diagrama ER do BibliotecaDB",
+      "projeto": "Banco de Dados Avançado — BibliotecaDB",
+      "responsavel": "Ricardo Francisco",
+      "status": "a-fazer",
+      "prioridade": "media",
+      "prazo": "22/08/2026"
+    },
+    {
+      "id": 3,
+      "titulo": "Levantar referências sobre entrevistas semiestruturadas",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "a-fazer",
+      "prioridade": "baixa",
+      "prazo": "25/08/2026"
+    },
+    {
+      "id": 4,
+      "titulo": "Realizar entrevista com o barbeiro (MEI)",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "em-andamento",
+      "prioridade": "alta",
+      "prazo": "18/08/2026"
+    },
+    {
+      "id": 5,
+      "titulo": "Criar tabelas Autor, Livro e Membro no SQL Server",
+      "projeto": "Banco de Dados Avançado — BibliotecaDB",
+      "responsavel": "Ricardo Francisco",
+      "status": "em-andamento",
+      "prioridade": "media",
+      "prazo": "19/08/2026"
+    },
+    {
+      "id": 6,
+      "titulo": "Transcrever as anotações da visita de campo",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "em-andamento",
+      "prioridade": "baixa",
+      "prazo": "24/08/2026"
+    },
+    {
+      "id": 7,
+      "titulo": "Revisar documento de requisitos levantados",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "em-revisao",
+      "prioridade": "baixa",
+      "prazo": "21/08/2026"
+    },
+    {
+      "id": 8,
+      "titulo": "Revisar script de criação da tabela Emprestimo",
+      "projeto": "Banco de Dados Avançado — BibliotecaDB",
+      "responsavel": "Ricardo Francisco",
+      "status": "em-revisao",
+      "prioridade": "alta",
+      "prazo": "23/08/2026"
+    },
+    {
+      "id": 9,
+      "titulo": "Definir escopo inicial do projeto com o MEI",
+      "projeto": "Projeto Integrador I — Coleta de Requisitos",
+      "responsavel": "Ricardo Francisco",
+      "status": "concluida",
+      "prioridade": "media",
+      "prazo": "15/08/2026"
+    },
+    {
+      "id": 10,
+      "titulo": "Configurar ambiente do SQL Server Express",
+      "projeto": "Banco de Dados Avançado — BibliotecaDB",
+      "responsavel": "Ricardo Francisco",
+      "status": "concluida",
+      "prioridade": "alta",
+      "prazo": "14/08/2026"
+    }
+  ]
+}

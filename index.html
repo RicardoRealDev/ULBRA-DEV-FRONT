@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diário de Campo — Painel de Tarefas Acadêmicas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,700;0,800;1,500&family=Caveat:wght@600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="capa-diario">
+      <span class="marca-diario" aria-hidden="true">
+        <svg viewBox="0 0 100 100" role="presentation" focusable="false">
+          <g fill="currentColor">
+            <rect x="14" y="58" width="64" height="34" rx="13"/>
+            <rect x="16" y="44" width="11" height="30" rx="5.5" transform="rotate(-18 21.5 74)"/>
+            <rect x="29" y="32" width="11" height="42" rx="5.5" transform="rotate(-9 34.5 74)"/>
+            <rect x="42" y="26" width="11" height="48" rx="5.5"/>
+            <rect x="55" y="32" width="11" height="42" rx="5.5" transform="rotate(9 60.5 74)"/>
+            <rect x="68" y="44" width="11" height="30" rx="5.5" transform="rotate(18 73.5 74)"/>
+            <rect x="76" y="58" width="11" height="26" rx="5.5" transform="rotate(30 81.5 84)"/>
+          </g>
+        </svg>
+        <span class="numero-diario">3</span>
+      </span>
+
+      <div class="capa-texto">
+        <p class="selo">Propriedade de Ricardo Francisco — Gravity Falls, Oregon</p>
+        <h1>Painel de Tarefas Acadêmicas</h1>
+        <p class="subtitulo">Anotações de campo, prazos e mistérios ainda não resolvidos</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="painel-busca revela" aria-labelledby="busca-filtros-heading">
+      <h2 id="busca-filtros-heading">Busca e filtros</h2>
+
+      <form>
+        <div>
+          <label for="busca-titulo">Buscar por título da tarefa</label>
+          <input type="search" id="busca-titulo" name="busca-titulo" placeholder="O que você está investigando?">
+        </div>
+
+        <fieldset>
+          <legend>Filtrar por status</legend>
+
+          <div>
+            <input type="radio" id="status-todos" name="filtro-status" value="todos" checked>
+            <label for="status-todos">Todos</label>
+          </div>
+          <div>
+            <input type="radio" id="status-a-fazer" name="filtro-status" value="a-fazer">
+            <label for="status-a-fazer">A fazer</label>
+          </div>
+          <div>
+            <input type="radio" id="status-em-andamento" name="filtro-status" value="em-andamento">
+            <label for="status-em-andamento">Em andamento</label>
+          </div>
+          <div>
+            <input type="radio" id="status-em-revisao" name="filtro-status" value="em-revisao">
+            <label for="status-em-revisao">Em revisão</label>
+          </div>
+          <div>
+            <input type="radio" id="status-concluida" name="filtro-status" value="concluida">
+            <label for="status-concluida">Concluída</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="filtro-diarios">
+          <legend>Filtrar por diário (prioridade)</legend>
+
+          <div>
+            <input type="radio" id="prioridade-todas" name="filtro-prioridade" value="todas" checked>
+            <label for="prioridade-todas">Todas</label>
+          </div>
+          <div>
+            <input type="radio" id="prioridade-baixa" name="filtro-prioridade" value="baixa">
+            <label for="prioridade-baixa">Diário 1 · Baixa</label>
+          </div>
+          <div>
+            <input type="radio" id="prioridade-media" name="filtro-prioridade" value="media">
+            <label for="prioridade-media">Diário 2 · Média</label>
+          </div>
+          <div>
+            <input type="radio" id="prioridade-alta" name="filtro-prioridade" value="alta">
+            <label for="prioridade-alta">Diário 3 · Alta</label>
+          </div>
+        </fieldset>
+
+        <button type="submit">Aplicar filtros</button>
+      </form>
+    </section>
+
+    <section class="chave-diarios revela" aria-labelledby="chave-heading">
+      <h2 id="chave-heading">Os três diários</h2>
+      <p class="chave-intro">Cada nível de prioridade tem um morador de Gravity Falls à altura.</p>
+
+      <ul>
+        <li class="chave-item chave-item--d1">
+          <span class="chave-retrato" aria-hidden="true"></span>
+          <span class="chave-texto">
+            <strong>Diário 1 · Baixa</strong>
+            <em>Gnomos.</em> Fazem barulho, viram um monte de gente, e no fim
+            um soprador de folhas resolve. Pode esperar.
+          </span>
+        </li>
+        <li class="chave-item chave-item--d2">
+          <span class="chave-retrato" aria-hidden="true"></span>
+          <span class="chave-texto">
+            <strong>Diário 2 · Média</strong>
+            <em>Gideon.</em> Pequeno, sorridente e insistente. Sozinho não
+            derruba nada, mas cresce se você deixar de olho.
+          </span>
+        </li>
+        <li class="chave-item chave-item--d3">
+          <span class="chave-retrato" aria-hidden="true"></span>
+          <span class="chave-texto">
+            <strong>Diário 3 · Alta</strong>
+            <em>Bill Cipher.</em> Se ele aparecer na página, larga tudo o que
+            estiver fazendo. Não existe amanhã para esta tarefa.
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Região viva: existe e está vazia desde o início do documento.
+         É preenchida por js/estados.js a cada mudança de estado. -->
+    <p id="regiao-status" class="regiao-status" role="status" aria-live="polite"></p>
+
+    <noscript>
+      <div class="tela tela--erro">
+        <p class="tela-titulo">O diário está lacrado</p>
+        <p>Esta página monta as tarefas com JavaScript. Ative o JavaScript para ler o quadro.</p>
+      </div>
+    </noscript>
+
+    <!-- Estado 1 de 4: carregando -->
+    <div id="tela-carregando" class="tela tela--carregando">
+      <p class="tela-titulo">Decifrando o diário…</p>
+      <p>Buscando as anotações de campo sob a luz negra.</p>
+      <div class="barra-revelacao" aria-hidden="true"></div>
+    </div>
+
+    <!-- Estado 2 de 4: vazio -->
+    <div id="tela-vazio" class="tela tela--vazio" hidden>
+      <p class="tela-titulo">Nenhuma página escrita</p>
+      <p>O diário respondeu, mas não há nenhuma tarefa registrada nele ainda.</p>
+    </div>
+
+    <!-- Estado 3 de 4: erro -->
+    <div id="tela-erro" class="tela tela--erro" hidden>
+      <p class="tela-titulo">Página arrancada</p>
+      <p id="mensagem-erro"></p>
+    </div>
+
+    <!-- Estado 4 de 4: sucesso -->
+    <section id="tela-sucesso" class="quadro" aria-labelledby="quadro-heading" hidden>
+      <h2 id="quadro-heading">Quadro de tarefas</h2>
+
+      <section class="coluna" aria-labelledby="coluna-a-fazer-heading">
+        <h3 id="coluna-a-fazer-heading">A fazer</h3>
+        <ul id="lista-a-fazer"></ul>
+      </section>
+
+      <section class="coluna" aria-labelledby="coluna-em-andamento-heading">
+        <h3 id="coluna-em-andamento-heading">Em andamento</h3>
+        <ul id="lista-em-andamento"></ul>
+      </section>
+
+      <section class="coluna" aria-labelledby="coluna-em-revisao-heading">
+        <h3 id="coluna-em-revisao-heading">Em revisão</h3>
+        <ul id="lista-em-revisao"></ul>
+      </section>
+
+      <section class="coluna" aria-labelledby="coluna-concluida-heading">
+        <h3 id="coluna-concluida-heading">Concluída</h3>
+        <ul id="lista-concluida"></ul>
+      </section>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Ricardo Francisco</p>
+    <p>Desenvolvimento Frontend — 2026.2</p>
+    <p class="cifra" title="Cifra de César, deslocamento 2. Passe o mouse para revelar.">
+      <span class="cifra-codigo">VJKU RCIG YCU DWKNV YKVJ EWTKQUKVA</span>
+      <span class="cifra-clara">THIS PAGE WAS BUILT WITH CURIOSITY</span>
+    </p>
+  </footer>
+
+  <!-- Camada decorativa: Bills que piscam e revelacao no scroll.
+       Separada de proposito — se este arquivo sumir, o quadro continua
+       carregando e desenhando as tarefas do mesmo jeito. -->
+  <script type="module" src="js/enfeites.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
