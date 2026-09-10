@@ -1,8 +1,8 @@
 /* ==========================================================================
    Tema "Diário de Campo" — Painel de Tarefas Acadêmicas
-   Ambientação Gravity Falls: página de pergaminho sobre madeira escura,
-   capa de couro com a mão de seis dedos e níveis de prioridade
-   representados pelos três Diários.
+   Ambientação Gravity Falls: a tela inteira é uma página do Diário 3 —
+   pergaminho manchado, esboços a nanquim ao fundo, anotações à mão — e os
+   níveis de prioridade são representados pelos três Diários.
 
    Mapa de prioridade:
      Diário 1 (couro azul-petróleo) .... prioridade baixa
@@ -27,33 +27,34 @@
   --d2-couro: #7F560C;
   --d3-couro: #8E2B22;
 
-  /* Metais e madeira */
+  /* Metais */
   --dourado: #C9A227;
   --dourado-claro: #E8CE86;
-  --madeira: #16100A;
 
   /* Tinta invisível, revelada sob luz negra */
   --uv: #7A5CFF;
 
   /* --------------------------------------------------------------------
-     Quatro papéis tipográficos, cada um com um trabalho definido.
+     Três papéis tipográficos, cada um com um trabalho definido.
 
-     display — só nos momentos de cena: a capa, o carimbo, a cifra. Special
-               Elite tem o caráter da máquina de escrever surrada, mas é
-               irregular demais para texto corrido ou para corpo pequeno.
-     titulo  — serif humanista de raiz caligráfica. Entrou no lugar da Bitter,
-               que era legível mas mecânica demais: as terminações angulares
-               e o ritmo irregular da Alegreya dão à página uma mão humana
-               sem custar nada em legibilidade a 0,8rem.
-     corpo   — serif de leitura, com haste robusta o bastante para não se
-               dissolver na textura do pergaminho.
-     mao     — reservada ao que é manuscrito de verdade: a assinatura e o
-               nome do responsável. Nunca em texto que precise ser lido rápido.
+     titulo — serif humanista de raiz caligráfica. As terminações angulares
+              e o ritmo irregular da Alegreya dão à página uma mão humana
+              sem custar legibilidade a 0,8rem. Rótulos, legendas, etiquetas.
+     corpo  — serif de leitura, com haste robusta o bastante para não se
+              dissolver na textura do pergaminho.
+     mao    — o que o autor do diário escreveu à mão: o título, os nomes das
+              seções e colunas, a assinatura. Sempre em corpo grande; nunca
+              em texto corrido ou que precise ser lido rápido.
+
+     A Special Elite (máquina de escrever carimbada) saiu: o traço duro e
+     mecânico brigava com uma página escrita e desenhada à mão.
      -------------------------------------------------------------------- */
-  --fonte-display: "Special Elite", "Courier New", monospace;
   --fonte-titulo: "Alegreya", "Palatino Linotype", Georgia, serif;
   --fonte-corpo: "Lora", Georgia, "Times New Roman", serif;
-  --fonte-mao: "Caveat", "Segoe Script", cursive;
+  --fonte-mao: "Caveat", "Segoe Print", "Segoe Script", cursive;
+
+  /* Traço de caneta vermelha usado como sublinhado dos títulos à mão. */
+  --rabisco: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M3 8 C30 3 52 10 82 6 S142 2 197 7' fill='none' stroke='%238E2B22' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
 
   --transicao: .22s ease;
 
@@ -96,8 +97,20 @@
   box-sizing: border-box;
 }
 
-/* ---------- Fundo: tábuas escuras da cabana ---------- */
+/* ---------- Fundo: a própria página do diário ---------- */
 
+/* A tela inteira é o papel. Sobre a cor, manchas de tempo; sobre elas, três
+   folhas de esboços a nanquim:
+   - fundo-margem-esquerda.svg — Bill Cipher, cifras, "CAN'T BE REAL";
+   - fundo-margem-direita.svg  — diagrama, cabeça frenológica, "DO NOT SUMMON";
+   - fundo-miolo.svg           — anotações apagadas atrás do conteúdo.
+   Os desenhos rolam junto com o conteúdo e se repetem na vertical a cada
+   2000px, então uma página comprida continua rabiscada até o fim.
+
+   Posição das margens: em background-position, a porcentagem vale sobre
+   (largura da tela − largura da imagem). Com imagem de 340px,
+   calc(50% - 650px) põe a borda direita do desenho 480px à esquerda do
+   centro — 30px por baixo da borda do conteúdo, que tem 1020px. */
 body {
   margin: 0;
   padding: 0 1.25rem 3.5rem;
@@ -107,77 +120,79 @@ body {
   font-family: var(--fonte-corpo);
   font-size: 17px;
   line-height: 1.65;
-  background-color: var(--madeira);
+  background-color: var(--pergaminho);
   background-image:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, .38) 0 2px, transparent 2px 9px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 34px),
-    radial-gradient(130% 90% at 50% 0%, #2C1D11 0%, #140D07 68%);
+    url("img/fundo-margem-esquerda.svg"),
+    url("img/fundo-margem-direita.svg"),
+    url("img/fundo-miolo.svg"),
+    radial-gradient(circle at 14% 10%, rgba(138, 94, 38, .24), transparent 34%),
+    radial-gradient(circle at 88% 26%, rgba(122, 82, 30, .2), transparent 30%),
+    radial-gradient(circle at 26% 64%, rgba(146, 106, 46, .18), transparent 36%),
+    radial-gradient(circle at 80% 86%, rgba(110, 74, 28, .2), transparent 32%);
+  background-size: 340px auto, 340px auto, 800px auto, auto, auto, auto, auto;
+  background-position: calc(50% - 650px) 40px, calc(50% + 650px) 40px, center 0, 0 0, 0 0, 0 0, 0 0;
+  background-repeat: repeat-y, repeat-y, repeat-y, no-repeat, no-repeat, no-repeat, no-repeat;
 }
 
-/* ---------- Capa do diário (cabeçalho) ---------- */
+/* Abaixo de 1300px as margens livres somem. Os desenhos passam a encostar
+   nas bordas da janela, meio cortados, e descem para não cruzar com o
+   cabeçalho; o halo claro do <main> segura a leitura por cima deles. */
+@media (max-width: 1300px) {
+  body {
+    background-size: 300px auto, 300px auto, 700px auto, auto, auto, auto, auto;
+    background-position: -110px 220px, calc(100% + 110px) 220px, center 220px, 0 0, 0 0, 0 0, 0 0;
+  }
+
+  main {
+    background: rgba(242, 231, 204, .62);
+    box-shadow: 0 0 60px 40px rgba(242, 231, 204, .62);
+  }
+}
+
+/* Bordas amareladas pelo tempo. Fixas na janela, atrás do conteúdo
+   (z-index -1) e sem capturar clique. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(110, 66, 22, .2) 85%, rgba(70, 38, 12, .38) 100%);
+}
+
+/* ---------- Cabeçalho: a anotação no alto da página ---------- */
 
 header {
   max-width: 1020px;
   margin: 0 auto;
-  padding: 2.75rem 0 0;
+  padding: 2.6rem 0 .6rem;
 }
 
+/* Mesmo halo de papel claro do <main>: nas telas estreitas, onde os esboços
+   passam por trás do cabeçalho, o título continua legível. */
 .capa-diario {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 1.6rem;
-  padding: 1.6rem 1.9rem 1.6rem 2.4rem;
-  border: 1px solid #3C100C;
-  border-radius: 5px 16px 16px 5px;
-  color: var(--pergaminho-claro);
-  background-color: #7A2118;
-  background-image:
-    repeating-linear-gradient(104deg, rgba(0, 0, 0, .12) 0 3px, transparent 3px 10px),
-    repeating-linear-gradient(14deg, rgba(255, 255, 255, .05) 0 2px, transparent 2px 11px),
-    linear-gradient(158deg, #9C3628 0%, #7A2118 46%, #52140F 100%);
-  box-shadow:
-    inset 0 0 0 2px rgba(201, 162, 39, .45),
-    inset 0 0 46px rgba(0, 0, 0, .55),
-    0 20px 34px rgba(0, 0, 0, .6);
-  transition: box-shadow var(--transicao);
+  gap: 1.4rem;
+  padding: .4rem 1.9rem;
+  border-radius: 40px;
+  background: rgba(242, 231, 204, .72);
+  box-shadow: 0 0 40px 28px rgba(242, 231, 204, .72);
 }
 
-/* Hover: o filete dourado da capa acende, como couro pegando luz. */
-.capa-diario:hover {
-  box-shadow:
-    inset 0 0 0 2px rgba(201, 162, 39, .85),
-    inset 0 0 46px rgba(0, 0, 0, .5),
-    0 24px 42px rgba(0, 0, 0, .68);
-}
-
-/* Lombada à esquerda */
-.capa-diario::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 18px;
-  border-radius: 5px 0 0 5px;
-  background: linear-gradient(90deg, #38100C 0%, #5A1811 55%, rgba(90, 24, 17, 0) 100%);
-}
-
+/* A mão de seis dedos da capa do Diário 3, carimbada em tinta vinho. */
 .marca-diario {
   position: relative;
   flex-shrink: 0;
-  width: 104px;
-  height: 104px;
-  color: var(--dourado-claro);
-  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .65));
-  transition: transform var(--transicao), filter var(--transicao);
+  width: 96px;
+  height: 96px;
+  color: var(--d3-couro);
+  transform: rotate(-6deg);
+  transition: transform var(--transicao);
 }
 
 .capa-diario:hover .marca-diario {
-  transform: rotate(-3deg) scale(1.04);
-  filter:
-    drop-shadow(0 0 12px rgba(232, 206, 134, .6))
-    drop-shadow(0 3px 4px rgba(0, 0, 0, .65));
+  transform: rotate(-2deg) scale(1.05);
 }
 
 .marca-diario svg {
@@ -188,14 +203,15 @@ header {
 
 .numero-diario {
   position: absolute;
-  top: 63%;
+  top: 56%;
   right: 0;
   left: 0;
-  font-family: var(--fonte-display);
-  font-size: 2rem;
+  font-family: var(--fonte-mao);
+  font-weight: 700;
+  font-size: 2.1rem;
   line-height: 1;
   text-align: center;
-  color: #58150F;
+  color: var(--pergaminho-claro);
 }
 
 .capa-texto {
@@ -203,75 +219,75 @@ header {
 }
 
 .selo {
-  margin: 0 0 .2rem;
+  margin: 0;
   font-family: var(--fonte-mao);
-  font-size: 1.3rem;
+  font-weight: 600;
+  font-size: 1.4rem;
   line-height: 1.15;
-  color: var(--dourado-claro);
-  opacity: .92;
+  color: var(--d3-couro);
 }
 
 header h1 {
+  display: inline-block;
   margin: 0;
-  font-family: var(--fonte-display);
-  font-size: clamp(1.55rem, 4.2vw, 2.4rem);
-  font-weight: 400;
-  line-height: 1.18;
-  letter-spacing: .01em;
-  color: var(--dourado-claro);
-  text-shadow: 0 2px 0 rgba(0, 0, 0, .45);
+  padding-bottom: .35rem;
+  font-family: var(--fonte-mao);
+  font-size: clamp(2.3rem, 6vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--tinta);
+  background: var(--rabisco) left bottom / 100% 12px no-repeat;
 }
 
 .subtitulo {
-  margin: .5rem 0 0;
-  font-size: .98rem;
+  margin: .45rem 0 0;
+  font-size: 1rem;
   font-style: italic;
-  color: rgba(245, 236, 214, .86);
+  color: var(--tinta-suave);
 }
 
-/* ---------- Página de pergaminho ---------- */
+/* ---------- Área de anotações ---------- */
 
+/* O conteúdo não mora mais numa caixa com borda. Um halo de papel mais
+   claro, sem contorno (a sombra da mesma cor esfuma a beirada), abre espaço
+   no meio dos esboços para o texto continuar legível. Nas margens, os
+   desenhos aparecem inteiros. */
 main {
   max-width: 1020px;
   margin: 0 auto;
-  padding: 2.2rem 1.9rem 2.6rem;
-  border: 1px solid #8B7443;
-  border-top: none;
-  background-color: var(--pergaminho);
-  background-image:
-    radial-gradient(circle at 12% 16%, rgba(138, 94, 38, .22), transparent 42%),
-    radial-gradient(circle at 88% 38%, rgba(122, 82, 30, .18), transparent 38%),
-    radial-gradient(circle at 34% 92%, rgba(146, 106, 46, .16), transparent 40%),
-    radial-gradient(circle at 74% 72%, rgba(110, 74, 28, .12), transparent 34%);
-  box-shadow:
-    inset 0 0 80px rgba(108, 72, 28, .38),
-    0 26px 44px rgba(0, 0, 0, .5);
+  padding: 1.6rem 1.9rem 2.6rem;
+  border-radius: 48px;
+  background: rgba(242, 231, 204, .5);
+  box-shadow: 0 0 60px 40px rgba(242, 231, 204, .5);
 }
 
 /* ---------- Busca e filtros ---------- */
 
+/* Os painéis são folhas soltas sobre a página: borda fina de lápis, cantos
+   desiguais como papel cortado à mão e uma sombra curta embaixo. */
 .painel-busca {
   padding: 1.3rem 1.5rem 1.5rem;
   margin-bottom: 2.4rem;
-  border: 1px dashed var(--linha);
-  border-radius: 4px;
-  background: rgba(255, 250, 236, .5);
+  border: 1px solid rgba(94, 74, 46, .28);
+  border-radius: 4px 14px 6px 16px / 16px 6px 14px 4px;
+  background: rgba(250, 243, 225, .86);
+  box-shadow: 0 10px 24px -14px rgba(60, 38, 14, .45);
 }
 
 h2 {
   margin-top: 0;
-  font-family: var(--fonte-titulo);
+  font-family: var(--fonte-mao);
   font-weight: 700;
-  font-size: 1.12rem;
-  letter-spacing: .07em;
-  text-transform: uppercase;
+  font-size: 2rem;
+  line-height: 1.1;
   color: var(--tinta);
 }
 
 .painel-busca h2 {
+  display: inline-block;
   margin-bottom: 1rem;
-  padding-bottom: .5rem;
-  border-bottom: 1px solid var(--linha);
+  padding-bottom: .3rem;
+  background: var(--rabisco) left bottom / 100% 10px no-repeat;
 }
 
 form > div {
@@ -337,10 +353,10 @@ select:hover {
 
 fieldset {
   margin: 1.1rem 0;
-  padding: .8rem 1rem 1rem;
-  border: 1px solid var(--linha);
-  border-radius: 3px;
-  background: rgba(255, 250, 236, .45);
+  padding: .7rem 1rem 1rem;
+  border: 1px solid rgba(94, 74, 46, .3);
+  border-radius: 12px 4px 10px 5px / 5px 10px 4px 12px;
+  background: rgba(255, 250, 236, .5);
   transition: border-color var(--transicao), background-color var(--transicao);
 }
 
@@ -350,12 +366,10 @@ fieldset:hover {
 }
 
 legend {
-  padding: 0 .5rem;
+  padding: 0 .4rem;
   font-family: var(--fonte-titulo);
   font-weight: 700;
-  font-size: .82rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  font-size: .95rem;
   color: var(--tinta);
 }
 
@@ -444,32 +458,28 @@ label[for="prioridade-todas"]::before {
   background: linear-gradient(180deg, var(--d3-couro) 0 33%, var(--d2-couro) 33% 66%, var(--d1-couro) 66%);
 }
 
+/* Limpar: a palavra circulada a caneta vermelha, não um bloco maciço. */
 .botao-limpar {
-  padding: .6rem 1.6rem;
-  border: 1px solid #3C100C;
-  border-radius: 3px;
-  background-color: var(--d3-couro);
-  background-image: linear-gradient(160deg, #A03A2B, #6E1C14);
-  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .5), 0 3px 0 rgba(0, 0, 0, .35);
-  color: var(--dourado-claro);
-  font-family: var(--fonte-titulo);
+  padding: .25rem 1.3rem .3rem;
+  border: 2px solid var(--d3-couro);
+  border-radius: 16px 5px 14px 6px / 6px 14px 5px 16px;
+  background: rgba(255, 250, 236, .7);
+  color: var(--d3-couro);
+  font-family: var(--fonte-mao);
   font-weight: 700;
-  font-size: .86rem;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  font-size: 1.4rem;
+  line-height: 1.3;
   cursor: var(--cursor-mao-ativa), pointer;
-  transition: background-image var(--transicao), box-shadow var(--transicao), transform var(--transicao);
+  transition: background-color var(--transicao), transform var(--transicao);
 }
 
 .botao-limpar:hover {
-  background-image: linear-gradient(160deg, #B54534, #7E2117);
-  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .95), 0 5px 0 rgba(0, 0, 0, .35), 0 6px 16px rgba(0, 0, 0, .3);
-  transform: translateY(-2px);
+  background-color: rgba(142, 43, 34, .1);
+  transform: rotate(-1.5deg);
 }
 
 .botao-limpar:active {
-  transform: translateY(2px);
-  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .7), 0 1px 0 rgba(0, 0, 0, .35);
+  transform: translateY(1px);
 }
 
 /* ---------- Chave dos diários: quem responde por cada prioridade ---------- */
@@ -477,9 +487,10 @@ label[for="prioridade-todas"]::before {
 .chave-diarios {
   padding: 1.3rem 1.5rem 1.5rem;
   margin-bottom: 2.4rem;
-  border: 1px solid var(--linha);
-  border-radius: 4px;
-  background: rgba(255, 250, 236, .38);
+  border: 1px solid rgba(94, 74, 46, .28);
+  border-radius: 14px 5px 16px 4px / 4px 16px 5px 14px;
+  background: rgba(250, 243, 225, .8);
+  box-shadow: 0 10px 24px -14px rgba(60, 38, 14, .45);
 }
 
 .chave-diarios h2 {
@@ -506,7 +517,7 @@ label[for="prioridade-todas"]::before {
   align-items: flex-start;
   gap: .85rem;
   padding-left: 12px;
-  border-left: 5px solid var(--couro);
+  border-left: 3px solid var(--couro);
   cursor: var(--cursor-mao-ativa), pointer;
 }
 
@@ -538,9 +549,7 @@ label[for="prioridade-todas"]::before {
   display: block;
   font-family: var(--fonte-titulo);
   font-weight: 800;
-  font-size: .84rem;
-  letter-spacing: .05em;
-  text-transform: uppercase;
+  font-size: .98rem;
   color: var(--couro-tinta);
 }
 
@@ -550,17 +559,18 @@ label[for="prioridade-todas"]::before {
   color: var(--tinta);
 }
 
-/* ---------- Foco de teclado: um brilho dourado ---------- */
+/* ---------- Foco de teclado: contorno em tinta vinho ---------- */
 
+/* Dourado sobre o pergaminho claro não chega a 3:1 de contraste; o vinho
+   passa com folga e continua dentro da paleta do diário. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px var(--pergaminho),
-    0 0 0 5px var(--dourado),
-    0 0 14px rgba(201, 162, 39, .6);
+    0 0 0 2px var(--pergaminho-claro),
+    0 0 0 4px var(--d3-couro);
 }
 
 /* ---------- Os quatro estados da tela ---------- */
@@ -591,11 +601,11 @@ select:focus-visible {
 
 .tela {
   display: block;
-  padding: 2.2rem 1.8rem;
+  padding: 2rem 1.8rem;
   margin-bottom: 2rem;
-  border: 2px dashed var(--linha);
-  border-radius: 4px;
-  background: rgba(255, 250, 236, .55);
+  border: 1px solid rgba(94, 74, 46, .3);
+  border-radius: 6px 16px 5px 14px / 14px 5px 16px 6px;
+  background: rgba(250, 243, 225, .86);
   text-align: center;
 }
 
@@ -606,9 +616,10 @@ select:focus-visible {
 
 .tela-titulo {
   margin: 0 !important;
-  font-family: var(--fonte-display);
-  font-size: 1.3rem;
-  line-height: 1.3;
+  font-family: var(--fonte-mao);
+  font-weight: 700;
+  font-size: 2rem;
+  line-height: 1.2;
   color: var(--tinta) !important;
 }
 
@@ -698,13 +709,12 @@ select:focus-visible {
   align-items: center;
   gap: 12px;
   margin: 0 0 1rem;
-  padding-bottom: .55rem;
-  border-bottom: 2px dotted var(--linha);
-  font-family: var(--fonte-titulo);
+  padding-bottom: .4rem;
+  border-bottom: 1px dashed rgba(94, 74, 46, .4);
+  font-family: var(--fonte-mao);
   font-weight: 700;
-  font-size: 1rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  font-size: 1.75rem;
+  line-height: 1.1;
   color: var(--tinta);
   transition: border-color var(--transicao);
 }
@@ -749,19 +759,19 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
   list-style: none;
 }
 
-/* ---------- Cartões: cada tarefa é um diário na estante ---------- */
+/* ---------- Cartões: cada tarefa é um recorte preso na página ---------- */
 
 .tarefa {
   --inclinacao: 0deg;
   position: relative;
   overflow: hidden;
   height: 100%;
-  padding: 1.05rem 1.2rem 1.15rem 1.7rem;
-  border: 1px solid var(--linha);
-  border-radius: 2px 5px 5px 2px;
+  padding: 1.55rem 1.2rem 1.15rem;
+  border: 1px solid rgba(94, 74, 46, .25);
+  border-radius: 3px;
   background-color: var(--pergaminho-claro);
-  background-image: radial-gradient(circle at 82% 12%, rgba(140, 96, 38, .14), transparent 46%);
-  box-shadow: 0 2px 4px rgba(30, 18, 6, .18);
+  background-image: radial-gradient(circle at 82% 12%, rgba(140, 96, 38, .12), transparent 46%);
+  box-shadow: 0 6px 14px -8px rgba(40, 24, 8, .45);
   cursor: var(--cursor-mao-ativa), pointer;
   transform: translateY(0) rotate(var(--inclinacao));
   transition: transform var(--transicao), box-shadow var(--transicao), border-color var(--transicao);
@@ -773,26 +783,23 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
 .coluna li:nth-child(odd) .tarefa  { --inclinacao: -.45deg; }
 .coluna li:nth-child(even) .tarefa { --inclinacao: .5deg; }
 
-/* Lombada de couro com filetes dourados */
+/* Fita adesiva na cor do diário, prendendo o recorte à página. É enfeite:
+   a prioridade continua escrita na etiqueta do cartão. */
 .tarefa::before {
   content: "";
   position: absolute;
   top: 0;
-  bottom: 0;
-  left: 0;
-  width: 13px;
-  border-radius: 2px 0 0 2px;
+  left: 50%;
+  width: 78px;
+  height: 18px;
   background-color: var(--couro);
-  background-image:
-    repeating-linear-gradient(180deg,
-      transparent 0 18px,
-      rgba(232, 206, 134, .85) 18px 21px,
-      transparent 21px 42px),
-    linear-gradient(90deg, rgba(0, 0, 0, .45), rgba(255, 255, 255, .16) 45%, rgba(0, 0, 0, .5));
-  transition: filter var(--transicao), width var(--transicao);
+  opacity: .5;
+  clip-path: polygon(3% 0, 97% 0, 100% 30%, 96% 55%, 100% 100%, 0 100%, 4% 60%, 0 25%);
+  transform: translateX(-50%) rotate(-2deg);
+  transition: opacity var(--transicao);
 }
 
-/* --couro pinta superfícies (lombada, etiqueta, borda); --couro-tinta é a
+/* --couro pinta superfícies (fita, contorno da etiqueta, borda); --couro-tinta é a
    versão escurecida para quando a cor do diário vira texto sobre o papel;
    --personagem é o morador que responde por aquele nível de prioridade. */
 .tarefa--d1 { --couro: var(--d1-couro); --couro-tinta: #133337; --personagem: var(--sketch-gnomo); }
@@ -816,8 +823,8 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
   transition: opacity .3s ease, transform .3s ease;
 }
 
-/* Hover do cartão: o diário se adianta na estante, endireita, a lombada pega
-   luz, o contorno de tinta invisível acende e o personagem aparece. */
+/* Hover do cartão: o recorte se ergue da página, endireita, a fita escurece,
+   o contorno de tinta invisível acende e o personagem aparece. */
 .tarefa:hover {
   transform: translateY(-4px) rotate(0deg);
   border-color: var(--couro);
@@ -833,8 +840,7 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
 }
 
 .tarefa:hover::before {
-  width: 16px;
-  filter: brightness(1.3);
+  opacity: .8;
 }
 
 .tarefa h4 {
@@ -874,37 +880,40 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
   color: var(--tinta) !important;
 }
 
-/* Etiqueta do diário: couro com a mão de seis dedos em dourado */
+/* Etiqueta do diário: carimbo contornado na cor do couro, com a mão de
+   seis dedos. */
 .prioridade {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   margin-top: .8rem !important;
-  padding: 3px 12px 3px 8px;
-  border: 1px solid rgba(0, 0, 0, .4);
-  border-radius: 3px;
-  background-color: var(--couro);
-  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .5);
-  color: var(--pergaminho-claro) !important;
+  padding: 1px 11px 1px 8px;
+  border: 1.5px solid var(--couro);
+  border-radius: 999px;
+  background-color: rgba(255, 250, 236, .6);
+  color: var(--couro-tinta) !important;
   font-family: var(--fonte-titulo);
-  font-weight: 600;
+  font-weight: 700;
   font-size: .82rem !important;
   letter-spacing: .01em;
   transition: box-shadow var(--transicao), transform var(--transicao);
 }
 
+/* A mão vira máscara: o desenho dá a forma e a cor vem do diário. */
 .prioridade::before {
   content: "";
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  background: var(--icone-mao) center / contain no-repeat;
+  width: 15px;
+  height: 15px;
+  background-color: var(--couro-tinta);
+  -webkit-mask: var(--icone-mao) center / contain no-repeat;
+  mask: var(--icone-mao) center / contain no-repeat;
   transition: transform var(--transicao);
 }
 
-/* Hover: a mão de seis dedos brilha na etiqueta. */
+/* Hover: a etiqueta ganha um halo dourado. */
 .tarefa:hover .prioridade {
-  box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .95), 0 0 12px rgba(232, 206, 134, .35);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, .25);
 }
 
 .tarefa:hover .prioridade::before {
@@ -926,8 +935,8 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
   min-height: 32px;
   margin-top: .75rem;
   padding: .2rem .75rem;
-  border: 1px dashed var(--linha);
-  border-radius: 3px;
+  border: 1px solid rgba(94, 74, 46, .35);
+  border-radius: 999px;
   background: rgba(255, 250, 236, .65);
   color: var(--couro-tinta);
   font-family: var(--fonte-titulo);
@@ -978,7 +987,8 @@ section[aria-labelledby="coluna-concluida-heading"] li::after {
   border: 2px solid var(--d3-couro);
   border-radius: 3px;
   color: var(--d3-couro);
-  font-family: var(--fonte-display);
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
   font-size: .62rem;
   letter-spacing: .12em;
   opacity: .4;
@@ -997,9 +1007,9 @@ section[aria-labelledby="coluna-concluida-heading"] li:hover::after {
 footer {
   max-width: 1020px;
   margin: 2.5rem auto 0;
-  padding-top: 1.1rem;
-  border-top: 1px solid rgba(201, 162, 39, .3);
-  color: rgba(245, 236, 214, .82);
+  padding: 1.1rem 1.9rem 0;
+  border-top: 1px dashed rgba(94, 74, 46, .35);
+  color: var(--tinta-suave);
   font-size: .94rem;
 }
 
@@ -1007,28 +1017,29 @@ footer p {
   margin: .2rem 0;
 }
 
+/* A assinatura, com a mesma caneta azul do nome do responsável. */
 footer p:first-child {
   font-family: var(--fonte-mao);
   font-weight: 700;
-  font-size: 1.45rem;
-  color: var(--dourado-claro);
+  font-size: 1.7rem;
+  color: #23406E;
 }
 
 /* A cifra do rodapé: passar o mouse decifra, como tinta revelada. */
 .cifra {
   display: inline-block;
   margin-top: .8rem !important;
-  font-family: var(--fonte-display);
-  font-size: .78rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: .8rem;
   letter-spacing: .2em;
-  color: rgba(201, 162, 39, .62);
+  color: var(--tinta-suave);
   cursor: var(--cursor-mao-ativa), help;
-  transition: color var(--transicao), text-shadow var(--transicao);
+  transition: color var(--transicao);
 }
 
 .cifra:hover {
-  color: var(--dourado-claro);
-  text-shadow: 0 0 12px rgba(232, 206, 134, .45);
+  color: var(--d3-couro);
 }
 
 .cifra-clara {
@@ -1126,19 +1137,32 @@ footer p:first-child {
 /* ---------- Telas menores ---------- */
 
 @media (max-width: 720px) {
+  /* No celular os desenhos encolhem mais e começam abaixo do cabeçalho, que
+     ali ocupa mais altura por empilhar a mão e o título. */
   body {
     padding: 0 .75rem 2.5rem;
+    background-size: 250px auto, 250px auto, 560px auto, auto, auto, auto, auto;
+    background-position: -70px 290px, calc(100% + 80px) 290px, center 290px, 0 0, 0 0, 0 0, 0 0;
   }
 
   main {
     padding: 1.5rem 1.1rem 2rem;
+    border-radius: 24px;
+    background: rgba(242, 231, 204, .66);
+    box-shadow: 0 0 24px 16px rgba(242, 231, 204, .66);
   }
 
   .capa-diario {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1.3rem 1.2rem 1.4rem 1.8rem;
+    gap: .6rem;
+    padding: .4rem 1.1rem;
+    border-radius: 24px;
+    box-shadow: 0 0 24px 16px rgba(242, 231, 204, .72);
+  }
+
+  footer {
+    padding-inline: 1.1rem;
   }
 
   .marca-diario {
@@ -1217,7 +1241,6 @@ footer p:first-child {
 
   .prioridade:hover,
   .botao-limpar:hover,
-  .capa-diario:hover .marca-diario,
   .coluna h3:hover::before,
   .filtro-diarios div:hover label::before,
   .chave-item:hover .chave-retrato {
@@ -1233,6 +1256,10 @@ footer p:first-child {
 
   .tarefa:hover::after {
     transform: none;
+  }
+
+  .capa-diario:hover .marca-diario {
+    transform: rotate(-6deg);
   }
 
   section[aria-labelledby="coluna-concluida-heading"] li:hover::after {
