@@ -12,7 +12,7 @@
 function normalizar(texto) {
   return texto
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/\p{Diacritic}/gu, "")
     .toLowerCase();
 }
 

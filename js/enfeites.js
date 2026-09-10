@@ -88,19 +88,34 @@ function prepararRevelacao() {
   /* Os cartões só existem depois que main.js recebe o JSON. Em vez de
      acoplar as duas coisas — e obrigar renderizacao.js a saber que existe
      animação — este vigia espera os <li> aparecerem por conta própria. */
+  /* Na E4 o quadro é redesenhado a cada tecla na busca e a cada filtro.
+     Só a primeira leva de cartões entra com animação; as seguintes já
+     nascem reveladas, senão o quadro inteiro piscaria enquanto se digita. */
+  let primeiraLeva = true;
+
   const vigia = new MutationObserver(function (mutacoes) {
+    let chegouCartao = false;
+
     mutacoes.forEach(function (mutacao) {
       mutacao.addedNodes.forEach(function (no) {
         if (no.nodeType !== 1 || no.tagName !== "LI") return;
+        chegouCartao = true;
+
+        const coluna = no.closest(".coluna");
+        if (coluna) observar(coluna.querySelector("h3"));
+
+        if (!primeiraLeva) {
+          no.classList.add("revelado");
+          return;
+        }
 
         const irmaos = no.parentNode.children;
         const indice = Array.prototype.indexOf.call(irmaos, no);
         observar(no, indice * 70);
-
-        const coluna = no.closest(".coluna");
-        if (coluna) observar(coluna.querySelector("h3"));
       });
     });
+
+    if (chegouCartao) primeiraLeva = false;
   });
 
   document.querySelectorAll(".coluna ul").forEach(function (lista) {

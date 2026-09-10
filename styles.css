@@ -314,6 +314,27 @@ input[type="search"]::placeholder {
   font-style: italic;
 }
 
+/* Ordenação: mesmo papel e mesma tinta do campo de busca. A seta continua
+   sendo a nativa do sistema, que o teclado e o toque já conhecem. */
+select {
+  width: 100%;
+  max-width: 380px;
+  padding: .55rem .85rem;
+  border: 1px solid var(--linha);
+  border-radius: 3px;
+  background-color: var(--pergaminho-claro);
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  color: var(--tinta);
+  cursor: var(--cursor-mao-ativa), pointer;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+select:hover {
+  border-color: var(--dourado);
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, .16);
+}
+
 fieldset {
   margin: 1.1rem 0;
   padding: .8rem 1rem 1rem;
@@ -423,7 +444,7 @@ label[for="prioridade-todas"]::before {
   background: linear-gradient(180deg, var(--d3-couro) 0 33%, var(--d2-couro) 33% 66%, var(--d1-couro) 66%);
 }
 
-button[type="submit"] {
+.botao-limpar {
   padding: .6rem 1.6rem;
   border: 1px solid #3C100C;
   border-radius: 3px;
@@ -440,13 +461,13 @@ button[type="submit"] {
   transition: background-image var(--transicao), box-shadow var(--transicao), transform var(--transicao);
 }
 
-button[type="submit"]:hover {
+.botao-limpar:hover {
   background-image: linear-gradient(160deg, #B54534, #7E2117);
   box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .95), 0 5px 0 rgba(0, 0, 0, .35), 0 6px 16px rgba(0, 0, 0, .3);
   transform: translateY(-2px);
 }
 
-button[type="submit"]:active {
+.botao-limpar:active {
   transform: translateY(2px);
   box-shadow: inset 0 0 0 1px rgba(232, 206, 134, .7), 0 1px 0 rgba(0, 0, 0, .35);
 }
@@ -533,7 +554,8 @@ button[type="submit"]:active {
 
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: none;
   box-shadow:
     0 0 0 3px var(--pergaminho),
@@ -615,7 +637,8 @@ input:focus-visible {
   to   { transform: translateX(260%); }
 }
 
-.tela--vazio {
+.tela--vazio,
+.tela--sem-resultados {
   opacity: .9;
 }
 
@@ -1107,7 +1130,8 @@ footer p:first-child {
     cursor: auto;
   }
 
-  button[type="submit"],
+  .botao-limpar,
+  select,
   input[type="radio"],
   fieldset label,
   .tarefa,
@@ -1145,7 +1169,7 @@ footer p:first-child {
   }
 
   .prioridade:hover,
-  button[type="submit"]:hover,
+  .botao-limpar:hover,
   .capa-diario:hover .marca-diario,
   .coluna h3:hover::before,
   .filtro-diarios div:hover label::before,

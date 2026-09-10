@@ -41,13 +41,13 @@
     <section class="painel-busca revela" aria-labelledby="busca-filtros-heading">
       <h2 id="busca-filtros-heading">Busca e filtros</h2>
 
-      <form>
+      <form id="form-filtros" role="search">
         <div>
           <label for="busca-titulo">Buscar por título da tarefa</label>
-          <input type="search" id="busca-titulo" name="busca-titulo" placeholder="O que você está investigando?">
+          <input type="search" id="busca-titulo" name="busca-titulo" placeholder="O que você está investigando?" autocomplete="off">
         </div>
 
-        <fieldset>
+        <fieldset id="filtro-status">
           <legend>Filtrar por status</legend>
 
           <div>
@@ -72,7 +72,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="filtro-diarios">
+        <fieldset id="filtro-prioridade" class="filtro-diarios">
           <legend>Filtrar por diário (prioridade)</legend>
 
           <div>
@@ -93,7 +93,18 @@
           </div>
         </fieldset>
 
-        <button type="submit">Aplicar filtros</button>
+        <div>
+          <label for="ordenacao">Ordenar por prazo</label>
+          <select id="ordenacao" name="ordenacao">
+            <option value="original" selected>Ordem do diário (original)</option>
+            <option value="prazo-asc">Prazo mais próximo primeiro</option>
+            <option value="prazo-desc">Prazo mais distante primeiro</option>
+          </select>
+        </div>
+
+        <!-- type="button": não envia o formulário. A limpeza é feita no
+             estado por js/main.js, e os campos são sincronizados a partir dele. -->
+        <button type="button" id="limpar-filtros" class="botao-limpar">Limpar filtros</button>
       </form>
     </section>
 
@@ -130,7 +141,7 @@
     </section>
 
     <!-- Região viva: existe e está vazia desde o início do documento.
-         É preenchida por js/estados.js a cada mudança de estado. -->
+         É preenchida por js/tela.js a cada renderização ("N de M tarefas"). -->
     <p id="regiao-status" class="regiao-status" role="status" aria-live="polite"></p>
 
     <noscript>
@@ -140,26 +151,32 @@
       </div>
     </noscript>
 
-    <!-- Estado 1 de 4: carregando -->
+    <!-- Tela: carregando -->
     <div id="tela-carregando" class="tela tela--carregando">
       <p class="tela-titulo">Decifrando o diário…</p>
       <p>Buscando as anotações de campo sob a luz negra.</p>
       <div class="barra-revelacao" aria-hidden="true"></div>
     </div>
 
-    <!-- Estado 2 de 4: vazio -->
+    <!-- Tela: origem vazia — o JSON chegou, mas sem nenhuma tarefa -->
     <div id="tela-vazio" class="tela tela--vazio" hidden>
       <p class="tela-titulo">Nenhuma página escrita</p>
       <p>O diário respondeu, mas não há nenhuma tarefa registrada nele ainda.</p>
     </div>
 
-    <!-- Estado 3 de 4: erro -->
+    <!-- Tela: resultado vazio — há tarefas, mas nenhuma passa nos critérios -->
+    <div id="tela-sem-resultados" class="tela tela--sem-resultados" hidden>
+      <p class="tela-titulo">Nenhuma pista com esses critérios</p>
+      <p>Há tarefas no diário, mas nenhuma combina com a busca e os filtros atuais. Altere os critérios ou use “Limpar filtros”.</p>
+    </div>
+
+    <!-- Tela: erro -->
     <div id="tela-erro" class="tela tela--erro" hidden>
       <p class="tela-titulo">Página arrancada</p>
       <p id="mensagem-erro"></p>
     </div>
 
-    <!-- Estado 4 de 4: sucesso -->
+    <!-- Tela: sucesso -->
     <section id="tela-sucesso" class="quadro" aria-labelledby="quadro-heading" hidden>
       <h2 id="quadro-heading">Quadro de tarefas</h2>
 

@@ -1,13 +1,16 @@
 /* ==========================================================================
-   js/main.js — inicialização (E3).
+   js/main.js — inicialização e ouvintes (E4).
 
-   Amarra as duas camadas: pede os dados a api.js e entrega o resultado a
-   estados.js. É o único lugar que conhece as duas pontas, e é onde o erro
-   vira texto para o usuário.
+   É o único lugar que escreve no estado. Cada ouvinte faz só duas coisas:
+   altera o estado e chama renderizar(estado). Nenhum deles filtra, ordena
+   ou esconde cartões — isso é trabalho da derivação, dentro da renderização.
+
+     evento → estado → derivação → renderização
    ========================================================================== */
 
 import { carregarTarefas } from "./api.js";
-import { renderizarEstado } from "./estados.js";
+import { estado, CRITERIOS_INICIAIS } from "./estado.js";
+import { renderizar } from "./tela.js";
 
 /* Cada tipo de falha ganha um texto próprio, separado por erro.name:
    - TypeError ......... a requisição não saiu do lugar (rede, offline, CORS)
@@ -29,30 +32,72 @@ function mensagemDeErro(erro) {
   return "Algo inesperado interrompeu o carregamento das tarefas.";
 }
 
+/* Os ouvintes são instalados uma única vez, na inicialização. Os controles
+   nunca são recriados, então não há o que reinstalar a cada renderização. */
+function ligarControles() {
+  document.getElementById("busca-titulo").addEventListener("input", function (evento) {
+    estado.busca = evento.target.value;
+    renderizar(estado);
+  });
+
+  /* Os radios disparam change e o evento sobe até o fieldset: um ouvinte
+     por grupo em vez de um por opção. */
+  document.getElementById("filtro-status").addEventListener("change", function (evento) {
+    estado.status = evento.target.value;
+    renderizar(estado);
+  });
+
+  document.getElementById("filtro-prioridade").addEventListener("change", function (evento) {
+    estado.prioridade = evento.target.value;
+    renderizar(estado);
+  });
+
+  document.getElementById("ordenacao").addEventListener("change", function (evento) {
+    estado.ordenacao = evento.target.value;
+    renderizar(estado);
+  });
+
+  /* Limpar mexe só no estado. Os campos voltam aos valores iniciais porque
+     a renderização os sincroniza a partir do estado — e não por um
+     form.reset(), que mudaria os controles sem avisar o estado. */
+  document.getElementById("limpar-filtros").addEventListener("click", function () {
+    Object.assign(estado, CRITERIOS_INICIAIS);
+    renderizar(estado);
+  });
+
+  /* Enter no campo de busca enviaria o formulário e recarregaria a página.
+     Não há nada a "aplicar": os critérios já valem enquanto se digita. */
+  document.getElementById("form-filtros").addEventListener("submit", function (evento) {
+    evento.preventDefault();
+  });
+}
+
 async function iniciar() {
   /* Antes do await, não depois: sem isto a tela fica em branco durante
      toda a espera da rede. */
-  renderizarEstado("carregando");
+  estado.carregamento = "carregando";
+  estado.erro = null;
+  renderizar(estado);
 
   try {
-    const tarefas = await carregarTarefas();
-
-    /* Vazio é um caminho de sucesso, não uma falha. Por isso é decidido
-       aqui, e não no catch: o servidor respondeu certo, a lista é que
-       não tem itens. */
-    if (tarefas.length === 0) {
-      renderizarEstado("vazio");
-      return;
-    }
-
-    renderizarEstado("sucesso", tarefas);
+    estado.tarefas = await carregarTarefas();
+    estado.carregamento = "sucesso";
   } catch (erro) {
     console.error(erro);
-    renderizarEstado("erro", mensagemDeErro(erro));
+    estado.carregamento = "erro";
+    estado.erro = mensagemDeErro(erro);
   }
+
+  /* A renderização fica fora do try. Assim o catch só recebe falhas de
+     obtenção dos dados — um defeito ao desenhar não seria relatado como
+     "servidor fora do ar", e zero resultados nunca passa por aqui. */
+  renderizar(estado);
 }
 
-/* Módulos são adiados por padrão, então o HTML já foi lido quando esta
-   linha roda. A chamada fica dentro de uma função: nenhum await solto no
-   topo do arquivo. */
+/* Módulos não criam variáveis globais, então `estado` não seria alcançável
+   pelo DevTools > Console. Esta linha existe só para inspeção manual;
+   nenhum código da aplicação lê window.estado. */
+window.estado = estado;
+
+ligarControles();
 iniciar();
