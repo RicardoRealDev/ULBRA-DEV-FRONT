@@ -915,6 +915,52 @@ section[aria-labelledby="coluna-concluida-heading"] h3::before    { background-i
   transform: translateY(-1px);
 }
 
+/* Botão de detalhes: discreto como uma anotação a lápis, mas com área de
+   toque de verdade. Fica acima do esboço do personagem no canto do cartão. */
+.botao-detalhes {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  min-height: 32px;
+  margin-top: .75rem;
+  padding: .2rem .75rem;
+  border: 1px dashed var(--linha);
+  border-radius: 3px;
+  background: rgba(255, 250, 236, .65);
+  color: var(--couro-tinta);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .03em;
+  cursor: var(--cursor-mao-ativa), pointer;
+  transition: border-color var(--transicao), background-color var(--transicao);
+}
+
+.botao-detalhes::after {
+  content: "▾";
+  transition: transform var(--transicao);
+}
+
+.botao-detalhes[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
+.botao-detalhes:hover {
+  border-style: solid;
+  border-color: var(--couro);
+  background: var(--pergaminho-claro);
+}
+
+.detalhes {
+  position: relative;
+  z-index: 1;
+  margin-top: .6rem;
+  padding-top: .5rem;
+  border-top: 1px dotted var(--linha);
+}
+
 /* Carimbo nos cartões já arquivados. Mora no <li>, e não no cartão, porque
    o ::after do cartão agora é do personagem — e porque um carimbo de verdade
    é aplicado por cima do papel, extravasando a borda. */
@@ -1131,6 +1177,7 @@ footer p:first-child {
   }
 
   .botao-limpar,
+  .botao-detalhes,
   select,
   input[type="radio"],
   fieldset label,

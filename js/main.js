@@ -1,9 +1,10 @@
 /* ==========================================================================
    js/main.js — inicialização e ouvintes (E4).
 
-   É o único lugar que escreve no estado. Cada ouvinte faz só duas coisas:
-   altera o estado e chama renderizar(estado). Nenhum deles filtra, ordena
-   ou esconde cartões — isso é trabalho da derivação, dentro da renderização.
+   É o único lugar que escreve no estado. Cada ouvinte dos controles faz só
+   duas coisas: altera o estado e chama renderizar(estado). Nenhum deles
+   filtra, ordena ou esconde cartões — isso é trabalho da derivação, dentro
+   da renderização.
 
      evento → estado → derivação → renderização
    ========================================================================== */
@@ -11,6 +12,7 @@
 import { carregarTarefas } from "./api.js";
 import { estado, CRITERIOS_INICIAIS } from "./estado.js";
 import { renderizar } from "./tela.js";
+import { alternarDetalhes } from "./renderizacao.js";
 
 /* Cada tipo de falha ganha um texto próprio, separado por erro.name:
    - TypeError ......... a requisição não saiu do lugar (rede, offline, CORS)
@@ -69,6 +71,19 @@ function ligarControles() {
      Não há nada a "aplicar": os critérios já valem enquanto se digita. */
   document.getElementById("form-filtros").addEventListener("submit", function (evento) {
     evento.preventDefault();
+  });
+
+  /* Delegação: um único ouvinte no quadro, instalado uma vez. Os cartões
+     são destruídos e recriados a cada renderização, mas #tela-sucesso não —
+     o clique no botão de um cartão novo sobe até aqui do mesmo jeito. Se o
+     ouvinte fosse posto em cada botão dentro da renderização, os cartões
+     novos só funcionariam se ele fosse reinstalado a cada vez. */
+  document.getElementById("tela-sucesso").addEventListener("click", function (evento) {
+    const botao = evento.target.closest('[data-acao="alternar-detalhes"]');
+
+    if (botao) {
+      alternarDetalhes(botao);
+    }
   });
 }
 

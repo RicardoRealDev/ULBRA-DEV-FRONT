@@ -44,21 +44,57 @@ function criarCartao(tarefa) {
   titulo.textContent = tarefa.titulo;
   artigo.appendChild(titulo);
 
-  artigo.appendChild(criarParagrafo("projeto", "Projeto: " + tarefa.projeto));
-
-  const responsavel = criarParagrafo("responsavel", "Responsável: ");
-  const nome = document.createElement("span");
-  nome.textContent = tarefa.responsavel;
-  responsavel.appendChild(nome);
-  artigo.appendChild(responsavel);
-
   artigo.appendChild(criarParagrafo("prazo", "Prazo: " + tarefa.prazo));
   artigo.appendChild(criarParagrafo(
     "prioridade",
     "Diário " + diario.numero + " · Prioridade " + diario.rotulo
   ));
 
+  /* Projeto e responsável ficam recolhidos atrás de um botão. O botão não
+     recebe ouvinte aqui: o clique é tratado por um único ouvinte delegado,
+     instalado uma vez em js/main.js no quadro, que nunca é recriado. */
+  const detalhesId = "tarefa-" + tarefa.id + "-detalhes";
+
+  const botao = document.createElement("button");
+  botao.type = "button";
+  botao.className = "botao-detalhes";
+  botao.dataset.acao = "alternar-detalhes";
+  botao.setAttribute("aria-expanded", "false");
+  botao.setAttribute("aria-controls", detalhesId);
+  /* Dez botões "Ver detalhes" iguais não dizem de qual tarefa se trata;
+     o título do cartão entra como descrição para o leitor de tela. */
+  botao.setAttribute("aria-describedby", tituloId);
+  botao.textContent = "Ver detalhes";
+  artigo.appendChild(botao);
+
+  const detalhes = document.createElement("div");
+  detalhes.id = detalhesId;
+  detalhes.className = "detalhes";
+  detalhes.hidden = true;
+
+  detalhes.appendChild(criarParagrafo("projeto", "Projeto: " + tarefa.projeto));
+
+  const responsavel = criarParagrafo("responsavel", "Responsável: ");
+  const nome = document.createElement("span");
+  nome.textContent = tarefa.responsavel;
+  responsavel.appendChild(nome);
+  detalhes.appendChild(responsavel);
+
+  artigo.appendChild(detalhes);
+
   return artigo;
+}
+
+/* Abre ou fecha os detalhes de UM cartão: o do botão clicado. É apresentação
+   daquele cartão, não um critério da lista, então não passa pelo estado nem
+   provoca nova renderização — que recriaria o botão e tiraria dele o foco do
+   teclado. Uma nova renderização devolve os cartões fechados. */
+export function alternarDetalhes(botao) {
+  const abrir = botao.getAttribute("aria-expanded") !== "true";
+
+  botao.setAttribute("aria-expanded", String(abrir));
+  botao.textContent = abrir ? "Ocultar detalhes" : "Ver detalhes";
+  document.getElementById(botao.getAttribute("aria-controls")).hidden = !abrir;
 }
 
 export function renderizarTarefas(tarefas) {
